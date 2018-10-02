@@ -6,11 +6,8 @@ function myMongoTool() {
   const events = require('events');
 
   this.Url = "mongodb://localhost:27017/";
-
   this.MongoClient = require('mongodb').MongoClient;
-
   this.DBConnection = undefined;
-
   this.eventEmitter = new events.EventEmitter();	
 
   this.connectDB = function(callback) {
@@ -82,6 +79,31 @@ function myMongoTool() {
     if (!updateStr) throw Error('updateOption.updateStr is undefined!');
 
     this._updateRec(this, dbName, collection, whereStr, updateStr, callback);
+  }
+  
+  this.getInsertOption = function(dbName, collection, data) {
+    return Object.create({
+      dbName : dbName,
+      collection : collection,
+      data : data
+    });
+  }
+  
+  this.getFindOption = function(dbName, collection, whereStr) {
+    return Object.create({
+      dbName : dbName,
+      collection : collection,
+      whereStr : whereStr
+    });
+  }
+  
+  this.getUpdateOption = function(dbName, collection, whereStr, updateStr) {
+    return Object.create({
+      dbName : dbName,
+      collection : collection,
+      whereStr : whereStr,
+      updateStr : updateStr
+    });
   }
 
   // return itself back
