@@ -11,9 +11,18 @@ function myMongoTool() {
   this.eventEmitter = new events.EventEmitter();	
 
   this.connectDB = function(callback) {
-    this._regConnectCallback(this, callback);
-    this._connectDB(this, this.MongoClient, this.Url, this._setConnection);
+    if (!this.DBConnection) {
+      this._regConnectCallback(this, callback);
+      this._connectDB(this, this.MongoClient, this.Url, this._setConnection);      
+    } else {
+      callback.apply(this, arguments);
+    }
+
   };
+  
+  this.isConnected = function() {
+    return this.DBConnection?true:false;
+  }
 
   this.disconnectDB = function() {
     if (this.DBConnection) this.DBConnection.close();
