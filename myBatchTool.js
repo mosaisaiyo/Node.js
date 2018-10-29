@@ -30,8 +30,8 @@ function myBatchTool() {
 
   this.regBatch = function() {
     var f = {};
-    this.batchNum++;
-    f.id = 'batch-'+this.batchNum;
+    this.batchList.push(f);
+    f.id = 'batch-'+this.batchList.length;
     f.me = this;
     f.complete = false;
     f.execBody = function() {};
@@ -39,8 +39,21 @@ function myBatchTool() {
       f.execBody.apply(f.me, arguments);
       f.me._batchComplete(f.me, f.id);
     };
-    this.batchList.push(f);
     return f;
+  }
+  
+  this.addBatchTask = function(taskBody, taskComplete) {
+    if (!typeof taskBody==='function') throw TypeError('taskBody is not function!');
+        
+    var f = {};
+    this.batchList.push(f);
+    f.id = 'batch-'+this.batchList.length;
+    f.me = this;
+    f.complete = false;
+    f.callback = function() {
+      f.me._batchComplete(f.me, f.id);
+    };
+    taskComplete = f.callback;
   }
 
   return this;
